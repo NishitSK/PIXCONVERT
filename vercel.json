@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "src/app/api/convert/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/convert/pdf/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/convert/zip/route.ts": {
+      "maxDuration": 10
+    }
+  }
+}
