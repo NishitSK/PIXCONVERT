@@ -8,7 +8,7 @@ import type { ConversionOptions } from "@/types/conversion"
 export const runtime = "nodejs"
 export const maxDuration = 60
 
-const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
+const MAX_SIZE = 4 * 1024 * 1024 // 4 MB
 
 export async function POST(req: NextRequest): Promise<NextResponse<ConvertResponse>> {
   try {

@@ -59,6 +59,10 @@ export function useConversionQueue() {
       formData.append("options", JSON.stringify(options))
 
       const res = await fetch("/api/convert", { method: "POST", body: formData })
+      if (res.status === 413) {
+        dispatch({ type: "FAIL_JOB", id: job.id, error: { code: "TOO_LARGE", message: "File too large (max 4 MB)." } })
+        return
+      }
       const data: ConvertResponse = await res.json()
 
       if (data.ok) {

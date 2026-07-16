@@ -7,7 +7,7 @@ export interface ValidationResult {
   error?: ConversionError
 }
 
-const MAX_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
+const MAX_SIZE_BYTES = 4 * 1024 * 1024 // 4 MB (Vercel Hobby body limit is 4.5 MB)
 
 export function validateFile(
   file: IngestedFile,
@@ -20,7 +20,7 @@ export function validateFile(
   }
 
   if (f.size > MAX_SIZE_BYTES) {
-    return { valid: false, error: { code: "TOO_LARGE", message: `File exceeds 10 MB limit.` } }
+    return { valid: false, error: { code: "TOO_LARGE", message: `File exceeds 4 MB limit.` } }
   }
 
   if (isAlreadyWebP(f.name, f.type)) {

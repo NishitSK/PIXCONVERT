@@ -4,7 +4,7 @@ import { PDFDocument } from "pdf-lib"
 export const runtime = "nodejs"
 export const maxDuration = 60
 
-const MAX_SIZE = 10 * 1024 * 1024
+const MAX_SIZE = 4 * 1024 * 1024
 
 export async function POST(req: NextRequest) {
   try {
