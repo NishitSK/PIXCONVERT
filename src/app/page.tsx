@@ -129,7 +129,7 @@ export default function Home() {
                 },
                 {
                   title: "Privacy first",
-                  body: "Files are processed server-side and immediately discarded. Nothing is stored or logged.",
+                  body: "Files are sent only for conversion and never stored or logged. Nothing is kept after the response.",
                 },
                 {
                   title: "Folder structure",
