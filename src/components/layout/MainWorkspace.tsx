@@ -120,11 +120,9 @@ export function MainWorkspace({ initialFiles, onClose }: MainWorkspaceProps) {
   // No files yet — full dropzone + settings
   if (total === 0 && staged.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl space-y-4 py-6 pb-16">
+      <div className="mx-auto max-w-2xl space-y-4 py-4 pb-16 sm:py-6">
         <UploadDropzone onFiles={handleFiles} multiple allowFolder />
-        <div className="flex justify-end">
-          <ConversionSettings options={options} onChange={setOptions} />
-        </div>
+        <ConversionSettings options={options} onChange={setOptions} />
       </div>
     )
   }
@@ -132,8 +130,8 @@ export function MainWorkspace({ initialFiles, onClose }: MainWorkspaceProps) {
   // Files staged — show settings confirmation before converting
   if (staged.length > 0 && total === 0) {
     return (
-      <div className="mx-auto max-w-lg py-6 pb-16 space-y-4">
-        <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 px-5 py-4">
+      <div className="mx-auto max-w-lg py-4 pb-16 space-y-3 sm:py-6 sm:space-y-4">
+        <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 px-4 py-3 sm:px-5 sm:py-4">
           <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
             {staged.length} file{staged.length !== 1 ? "s" : ""} ready
           </p>
@@ -168,14 +166,16 @@ export function MainWorkspace({ initialFiles, onClose }: MainWorkspaceProps) {
     <div className="py-4 pb-16 sm:py-6">
       <div className="grid gap-4 sm:grid-cols-[1fr_420px]">
 
+        {/* On mobile: right col renders first via order utilities so queue/results show at top */}
+
         {/* Left: dropzone → compare → footer actions */}
-        <div className="flex flex-col gap-4">
+        <div className="order-2 flex flex-col gap-4 sm:order-1">
           <UploadDropzone
             onFiles={handleFiles}
             multiple
             allowFolder
             disabled={isProcessing}
-            className="flex-1 min-h-[180px]"
+            className="min-h-[140px] sm:flex-1 sm:min-h-[180px]"
           />
 
           <ComparisonPanel
@@ -206,7 +206,7 @@ export function MainWorkspace({ initialFiles, onClose }: MainWorkspaceProps) {
         </div>
 
         {/* Right: settings → results → download → file queue */}
-        <div className="flex flex-col gap-3">
+        <div className="order-1 flex flex-col gap-3 sm:order-2">
           <ConversionSettings
             options={options}
             onChange={setOptions}

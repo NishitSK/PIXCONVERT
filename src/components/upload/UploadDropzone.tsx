@@ -156,7 +156,7 @@ export function UploadDropzone({
       tabIndex={0}
       aria-label="Upload images — click to browse or drag and drop"
       className={cn(
-        "relative flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed px-8 py-16 text-center transition-colors outline-none",
+        "relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors outline-none sm:gap-4 sm:px-8 sm:py-12",
       className,
         isDragging
           ? "border-neutral-400 bg-neutral-50 dark:border-neutral-500 dark:bg-neutral-900"
@@ -178,7 +178,7 @@ export function UploadDropzone({
           Drop images or folders here, or click to browse
         </p>
         <p className="mt-1 text-xs text-neutral-500">
-          JPG, PNG, BMP, TIFF, GIF, HEIC, AVIF, SVG · Max 50 MB per file
+          JPG, PNG, BMP, TIFF, GIF, HEIC, AVIF, SVG · Max 4 MB per file
         </p>
       </div>
 
