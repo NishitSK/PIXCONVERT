@@ -32,6 +32,24 @@ function clamp(v: number, min: number, max: number) {
   return Math.min(max, Math.max(min, v))
 }
 
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [header, data] = dataUrl.split(",")
+  const mime = header.match(/:(.*?);/)?.[1] ?? "image/webp"
+  const bytes = atob(data)
+  const arr = new Uint8Array(bytes.length)
+  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i)
+  return new Blob([arr], { type: mime })
+}
+
+function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
+  })
+}
+
 export default function VideoPage() {
   const [videoFile, setVideoFile] = useState<File | null>(null)
   const [videoDuration, setVideoDuration] = useState(0)
@@ -150,14 +168,9 @@ export default function VideoPage() {
         if (bgRemover) {
           setBgProgress(`Removing bg ${i + 1}/${timestamps.length}…`)
           try {
-            const res = await fetch(dataUrl)
-            const blob = await res.blob()
+            const blob = dataUrlToBlob(dataUrl)
             const resultBlob = await bgRemover(blob)
-            dataUrl = await new Promise<string>((resolve) => {
-              const reader = new FileReader()
-              reader.onload = () => resolve(reader.result as string)
-              reader.readAsDataURL(resultBlob)
-            })
+            dataUrl = await blobToDataUrl(resultBlob)
           } catch {
             // keep original frame if bg removal fails
           }
