@@ -170,12 +170,11 @@ export default function VideoPage() {
 
     setBgProgress("")
     setFrames(extracted)
+    setStatus("done")
 
     if (skipPreview && extracted.length > 0) {
-      await doZip(extracted)
+      try { await doZip(extracted) } catch { /* ignore, user can still click download */ }
     }
-
-    setStatus("done")
   }, [videoDuration, startTime, endTime, fps, format, quality, sizeIndex, skipPreview])
 
   const doZip = async (framesToZip: Frame[]) => {
