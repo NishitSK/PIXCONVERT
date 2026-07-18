@@ -191,7 +191,7 @@ export default function VideoPage() {
     if (skipPreview && extracted.length > 0) {
       try { await doZip(extracted) } catch { /* ignore, user can still click download */ }
     }
-  }, [videoDuration, startTime, endTime, fps, format, quality, sizeIndex, skipPreview])
+  }, [videoDuration, startTime, endTime, fps, format, quality, sizeIndex, skipPreview, removeBg])
 
   const doZip = async (framesToZip: Frame[]) => {
     setIsZipping(true)
