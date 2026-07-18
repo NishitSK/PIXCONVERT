@@ -490,18 +490,26 @@ export default function VideoPage() {
             {/* Results */}
             {frames.length > 0 && status === "done" && (
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                    {frames.length} frame{frames.length !== 1 ? "s" : ""} extracted
-                  </p>
-                  <button
-                    onClick={downloadAll}
-                    disabled={isZipping}
-                    className="flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 disabled:opacity-60 transition-colors"
-                  >
-                    {isZipping ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
-                    Download ZIP
-                  </button>
+                {/* Prominent download card */}
+                <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-4 dark:border-emerald-900/40 dark:bg-emerald-950/20">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
+                        {frames.length} frame{frames.length !== 1 ? "s" : ""} extracted
+                      </p>
+                      <p className="text-xs text-emerald-600 dark:text-emerald-500 mt-0.5">
+                        {format.toUpperCase()}{removeBg ? " · background removed" : ""}
+                      </p>
+                    </div>
+                    <button
+                      onClick={downloadAll}
+                      disabled={isZipping}
+                      className="flex shrink-0 items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-60 transition-colors dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                    >
+                      {isZipping ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                      {isZipping ? "Zipping…" : "Download ZIP"}
+                    </button>
+                  </div>
                 </div>
 
                 {!skipPreview && (
