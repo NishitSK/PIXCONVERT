@@ -138,7 +138,6 @@ export default function VideoPage() {
       const { removeBackground } = await import("@imgly/background-removal")
       bgRemover = (blob: Blob) =>
         removeBackground(blob, {
-          device: "webgpu",
           output: { format: format === "webp" ? "image/webp" : "image/png", quality: quality / 100 },
         })
       setBgProgress("")
@@ -150,14 +149,18 @@ export default function VideoPage() {
 
         if (bgRemover) {
           setBgProgress(`Removing bg ${i + 1}/${timestamps.length}…`)
-          const res = await fetch(dataUrl)
-          const blob = await res.blob()
-          const resultBlob = await bgRemover(blob)
-          dataUrl = await new Promise<string>((resolve) => {
-            const reader = new FileReader()
-            reader.onload = () => resolve(reader.result as string)
-            reader.readAsDataURL(resultBlob)
-          })
+          try {
+            const res = await fetch(dataUrl)
+            const blob = await res.blob()
+            const resultBlob = await bgRemover(blob)
+            dataUrl = await new Promise<string>((resolve) => {
+              const reader = new FileReader()
+              reader.onload = () => resolve(reader.result as string)
+              reader.readAsDataURL(resultBlob)
+            })
+          } catch {
+            // keep original frame if bg removal fails
+          }
         }
 
         extracted.push({ index: i + 1, timeS: timestamps[i], dataUrl })
