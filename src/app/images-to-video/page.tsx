@@ -24,7 +24,7 @@ function sleep(ms: number) {
 
 export default function ImagesToVideoPage() {
   const [images, setImages] = useState<ImageItem[]>([])
-  const frameDuration = 1 // seconds per image (fixed)
+  const [fps, setFps] = useState(1)
   const [resolutionIdx, setResolutionIdx] = useState(0)
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle")
   const [progress, setProgress] = useState(0)
@@ -168,7 +168,7 @@ export default function ImagesToVideoPage() {
         ctx.drawImage(img, (canvasW - drawW) / 2, (canvasH - drawH) / 2, drawW, drawH)
 
         setProgress(Math.round(((i + 1) / images.length) * 100))
-        await sleep(frameDuration * 1000)
+        await sleep((1 / fps) * 1000)
       }
 
       recorder.stop()
@@ -234,7 +234,19 @@ export default function ImagesToVideoPage() {
         {images.length > 0 && (
           <div className="mt-4 space-y-4">
             {/* Settings */}
-            <div className="rounded-xl border border-neutral-100 dark:border-neutral-800">
+            <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-800">
+              <div className="px-4 py-3 flex items-center justify-between gap-4">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">Frames per second</span>
+                <select
+                  value={fps}
+                  onChange={(e) => setFps(Number(e.target.value))}
+                  className="rounded-md border border-neutral-200 bg-neutral-50 px-2 py-1.5 text-sm focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                >
+                  {[1, 2, 5, 10, 15, 24, 30].map((f) => (
+                    <option key={f} value={f}>{f} fps</option>
+                  ))}
+                </select>
+              </div>
               <div className="px-4 py-3 flex items-center justify-between gap-4">
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">Resolution</span>
                 <select
