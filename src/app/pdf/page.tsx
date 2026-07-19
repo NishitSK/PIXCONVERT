@@ -5,6 +5,7 @@ import { UploadDropzone } from "@/components/upload/UploadDropzone"
 import { formatBytes } from "@/lib/utils/fileUtils"
 import { FileText, X, Download, Loader2, ArrowLeft, ChevronUp, ChevronDown } from "lucide-react"
 import Link from "next/link"
+import { Navbar } from "@/components/layout/Navbar"
 
 interface PDFFile {
   id: string
@@ -63,20 +64,52 @@ export default function PDFPage() {
     setError("")
   }
 
+  const fileToJpeg = (file: File): Promise<{ dataUrl: string; w: number; h: number }> =>
+    new Promise((resolve, reject) => {
+      const img = document.createElement("img")
+      const url = URL.createObjectURL(file)
+      img.onload = () => {
+        const c = document.createElement("canvas")
+        c.width = img.naturalWidth
+        c.height = img.naturalHeight
+        const ctx = c.getContext("2d")!
+        ctx.fillStyle = "#FFFFFF"
+        ctx.fillRect(0, 0, c.width, c.height)
+        ctx.drawImage(img, 0, 0)
+        URL.revokeObjectURL(url)
+        resolve({ dataUrl: c.toDataURL("image/jpeg", 0.92), w: img.naturalWidth, h: img.naturalHeight })
+      }
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(`Failed to load ${file.name}`)) }
+      img.src = url
+    })
+
   const convert = async () => {
     if (!files.length) return
     setStatus("loading")
     setError("")
     try {
-      const fd = new FormData()
-      files.forEach((f) => fd.append("files", f.file))
-      fd.append("pageSize", pageSize)
-      const res = await fetch("/api/convert/pdf", { method: "POST", body: fd })
-      if (!res.ok) {
-        const json = await res.json().catch(() => ({}))
-        throw new Error(json.message ?? "PDF generation failed.")
+      const { PDFDocument } = await import("pdf-lib")
+      const pdf = await PDFDocument.create()
+
+      for (const pdfFile of files) {
+        const { dataUrl, w: imgW, h: imgH } = await fileToJpeg(pdfFile.file)
+        const jpegBytes = Uint8Array.from(atob(dataUrl.split(",")[1]), (c) => c.charCodeAt(0))
+        const jpgImage = await pdf.embedJpg(jpegBytes)
+
+        let pageW: number, pageH: number
+        if (pageSize === "a4") { pageW = 595.28; pageH = 841.89 }
+        else if (pageSize === "letter") { pageW = 612; pageH = 792 }
+        else { pageW = imgW; pageH = imgH }
+
+        const scale = Math.min(pageW / imgW, pageH / imgH)
+        const drawW = imgW * scale
+        const drawH = imgH * scale
+        const page = pdf.addPage([pageW, pageH])
+        page.drawImage(jpgImage, { x: (pageW - drawW) / 2, y: (pageH - drawH) / 2, width: drawW, height: drawH })
       }
-      const blob = await res.blob()
+
+      const pdfBytes = await pdf.save()
+      const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: "application/pdf" })
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
@@ -92,6 +125,7 @@ export default function PDFPage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950">
+      <Navbar />
       <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
         <Link
           href="/"
@@ -106,7 +140,7 @@ export default function PDFPage() {
             Images to PDF
           </h1>
           <p className="mt-1 text-sm text-neutral-500">
-            Combine multiple images into a single PDF. Drag to reorder before converting.
+            Combine multiple images into a single PDF. Runs entirely in your browser — nothing uploaded.
           </p>
         </div>
 
@@ -224,6 +258,35 @@ export default function PDFPage() {
             )}
           </div>
         )}
+
+        <div className="mt-16 border-t border-neutral-100 dark:border-neutral-900 pt-10">
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              {
+                title: "Flexible",
+                body: "Choose from Fit, A4, or Letter page formats with automatic scaling.",
+              },
+              {
+                title: "Simple",
+                body: "Drag & drop multiple images, reorder with arrow controls, and compile with one click.",
+              },
+              {
+                title: "Secure",
+                body: "All PDF creation runs client-side using pdf-lib — no server uploads.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-xl border border-neutral-100 p-5 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/30"
+              >
+                <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-neutral-500">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   )

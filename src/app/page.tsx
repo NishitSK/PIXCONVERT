@@ -3,7 +3,8 @@
 import { useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ImageIcon, FileText, Film, Eraser } from "lucide-react"
+import { ImageIcon, FileText, Film, Eraser, ShieldCheck, Palette, Stamp } from "lucide-react"
+import { Navbar } from "@/components/layout/Navbar"
 import { Hero } from "@/components/layout/Hero"
 import { UploadDropzone } from "@/components/upload/UploadDropzone"
 import { usePendingFiles } from "@/context/FilesContext"
@@ -32,43 +33,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950">
-      <nav className="sticky top-0 z-30 border-b border-neutral-100 bg-white/80 backdrop-blur-md dark:border-neutral-900 dark:bg-neutral-950/80">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
-          <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-            ImageTools
-          </span>
-          <div className="flex items-center gap-0.5 sm:gap-1">
-            <button
-              onClick={scrollToDropzone}
-              className="rounded-lg px-2 py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 transition-colors sm:px-3"
-            >
-              <span className="hidden sm:inline">Convert to WebP</span>
-              <span className="sm:hidden">WebP</span>
-            </button>
-            <Link
-              href="/pdf"
-              className="rounded-lg px-2 py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 transition-colors sm:px-3"
-            >
-              <span className="hidden sm:inline">Images to PDF</span>
-              <span className="sm:hidden">PDF</span>
-            </Link>
-            <Link
-              href="/video"
-              className="rounded-lg px-2 py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 transition-colors sm:px-3"
-            >
-              <span className="hidden sm:inline">Video to Images</span>
-              <span className="sm:hidden">Video</span>
-            </Link>
-            <Link
-              href="/remove-bg"
-              className="rounded-lg px-2 py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 transition-colors sm:px-3"
-            >
-              <span className="hidden sm:inline">Remove BG</span>
-              <span className="sm:hidden">BG</span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <Hero onUploadClick={scrollToDropzone} onLearnMoreClick={scrollToLearnMore} />
@@ -78,11 +43,11 @@ export default function Home() {
         </div>
 
         <section className="border-t border-neutral-100 py-12 dark:border-neutral-900">
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-3xl">
             <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
               More tools
             </h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <div className="rounded-xl border border-neutral-100 p-4 dark:border-neutral-900 flex items-start gap-3">
                 <div className="mt-0.5 rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800">
                   <ImageIcon className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
@@ -132,7 +97,7 @@ export default function Home() {
                     Video to Images
                   </h3>
                   <p className="mt-0.5 text-xs text-neutral-500">
-                    Extract frames from any video as WebP or PNG. Runs entirely in your browser.
+                    Extract frames from any video as WebP or PNG. Runs entirely in browser.
                   </p>
                   <span className="mt-2 inline-block text-xs font-medium text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors">
                     Open tool →
@@ -152,7 +117,67 @@ export default function Home() {
                     Remove Background
                   </h3>
                   <p className="mt-0.5 text-xs text-neutral-500">
-                    AI-powered background removal. Runs entirely in your browser.
+                    AI-powered background removal running in browser.
+                  </p>
+                  <span className="mt-2 inline-block text-xs font-medium text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors">
+                    Open tool →
+                  </span>
+                </div>
+              </Link>
+
+              <Link
+                href="/exif"
+                className="rounded-xl border border-neutral-100 p-4 dark:border-neutral-900 flex items-start gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors group"
+              >
+                <div className="mt-0.5 rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800 group-hover:bg-neutral-200 dark:group-hover:bg-neutral-700 transition-colors">
+                  <ShieldCheck className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                    EXIF Viewer & Privacy
+                  </h3>
+                  <p className="mt-0.5 text-xs text-neutral-500">
+                    View camera EXIF specs, GPS location, and strip metadata for privacy.
+                  </p>
+                  <span className="mt-2 inline-block text-xs font-medium text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors">
+                    Open tool →
+                  </span>
+                </div>
+              </Link>
+
+              <Link
+                href="/palette"
+                className="rounded-xl border border-neutral-100 p-4 dark:border-neutral-900 flex items-start gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors group"
+              >
+                <div className="mt-0.5 rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800 group-hover:bg-neutral-200 dark:group-hover:bg-neutral-700 transition-colors">
+                  <Palette className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                    Color Palette & Picker
+                  </h3>
+                  <p className="mt-0.5 text-xs text-neutral-500">
+                    Extract dominant swatches & sample pixel colors with loupe view.
+                  </p>
+                  <span className="mt-2 inline-block text-xs font-medium text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors">
+                    Open tool →
+                  </span>
+                </div>
+              </Link>
+
+              <Link
+                href="/watermark"
+                className="rounded-xl border border-neutral-100 p-4 dark:border-neutral-900 flex items-start gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors group"
+              >
+                <div className="mt-0.5 rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800 group-hover:bg-neutral-200 dark:group-hover:bg-neutral-700 transition-colors">
+                  <Stamp className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                    Batch Watermarker
+                  </h3>
+                  <p className="mt-0.5 text-xs text-neutral-500">
+                    Overlay custom text or logo image watermarks across multiple photos.
                   </p>
                   <span className="mt-2 inline-block text-xs font-medium text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors">
                     Open tool →
@@ -177,29 +202,29 @@ export default function Home() {
               and 26% smaller than PNG, with no perceptible loss in quality at default settings.
             </p>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {[
                 {
-                  title: "Batch processing",
-                  body: "Convert hundreds of images at once. Upload a folder or ZIP archive and download all results in one click.",
+                  title: "Small",
+                  body: "Smaller images mean faster load times. ImageTools can reduce file size and maintain high quality.",
                 },
                 {
-                  title: "Privacy first",
-                  body: "Files are sent only for conversion and never stored or logged. Nothing is kept after the response.",
+                  title: "Simple",
+                  body: "Open your image, inspect the differences, then save instantly. Feeling adventurous? Adjust the settings for even smaller files.",
                 },
                 {
-                  title: "Folder structure",
-                  body: "Original directory structure is preserved inside the downloaded ZIP — no manual reorganization needed.",
+                  title: "Secure",
+                  body: "Worried about privacy? Images never leave your device since ImageTools does all the work locally.",
                 },
               ].map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-xl border border-neutral-100 p-4 dark:border-neutral-900"
+                  className="rounded-xl border border-neutral-100 p-5 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/30"
                 >
-                  <h3 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                  <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {item.title}
                   </h3>
-                  <p className="mt-1.5 text-xs leading-relaxed text-neutral-500">{item.body}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-neutral-500">{item.body}</p>
                 </div>
               ))}
             </div>

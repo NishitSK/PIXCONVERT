@@ -53,21 +53,20 @@ export function MainWorkspace({ initialFiles, onClose }: MainWorkspaceProps) {
   optionsRef.current = options
   const pendingReconvertRef = useRef(false)
 
-  // When targetSizeKb changes, debounce a reconvert.
+  // When quality, lossless, or targetSizeKb changes after conversion is done, reconvert.
   // If conversion is still running, set a flag — the isDone effect below picks it up.
   useEffect(() => {
-    if (options.targetSizeKb === null || !hasFiles) return
+    if (!hasFiles) return
     if (!isDone) { pendingReconvertRef.current = true; return }
     pendingReconvertRef.current = false
     const timer = setTimeout(() => resubmitAll(optionsRef.current), 600)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options.targetSizeKb])
+  }, [options.quality, options.lossless, options.targetSizeKb])
 
   // When conversion finishes, fire any reconvert that was queued while it was running
   useEffect(() => {
     if (!isDone || !hasFiles || !pendingReconvertRef.current) return
-    if (optionsRef.current.targetSizeKb === null) { pendingReconvertRef.current = false; return }
     pendingReconvertRef.current = false
     const timer = setTimeout(() => resubmitAll(optionsRef.current), 600)
     return () => clearTimeout(timer)

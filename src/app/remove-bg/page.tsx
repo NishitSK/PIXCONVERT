@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react"
 import { ArrowLeft, Download, X, Loader2, Eraser } from "lucide-react"
 import Link from "next/link"
 import { formatBytes } from "@/lib/utils/fileUtils"
+import { Navbar } from "@/components/layout/Navbar"
 
 interface BgFile {
   id: string
@@ -99,6 +100,7 @@ export default function RemoveBgPage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950">
+      <Navbar />
       <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
         <Link
           href="/"
@@ -283,6 +285,35 @@ export default function RemoveBgPage() {
             </p>
           </div>
         )}
+
+        <div className="mt-16 border-t border-neutral-100 dark:border-neutral-900 pt-10">
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              {
+                title: "Smart",
+                body: "Powered by background-removal AI models for automatic cutout detection.",
+              },
+              {
+                title: "Simple",
+                body: "Drop your photos and get transparent PNG outputs instantly.",
+              },
+              {
+                title: "Secure",
+                body: "Runs AI models directly in WebAssembly/ONNX inside your browser — zero cloud uploads.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-xl border border-neutral-100 p-5 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/30"
+              >
+                <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-neutral-500">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   )
