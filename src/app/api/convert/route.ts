@@ -8,7 +8,7 @@ import type { ConversionOptions } from "@/types/conversion"
 export const runtime = "nodejs"
 export const maxDuration = 60
 
-const MAX_SIZE = 4 * 1024 * 1024 // 4 MB
+const MAX_SIZE = 50 * 1024 * 1024 // 50 MB (HEIC from iPhones can be 5–10 MB)
 
 export async function POST(req: NextRequest): Promise<NextResponse<ConvertResponse>> {
   try {
